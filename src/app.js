@@ -15,7 +15,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (!('serviceWorker' in navigator)) {
-        console.warn("Service workers aren't supported on this browser");
+        console.warn("Service workers are not supported by this browser");
+        changePushButtonState('incompatible');
+        return;
+    }
+
+    if (!('PushManager' in window)) {
+        console.warn('Push notifications are not supported by this browser');
+        changePushButtonState('incompatible');
+        return;
+    }
+
+    if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+        console.warn('Notifications are not supported by this browser');
         changePushButtonState('incompatible');
         return;
     }
