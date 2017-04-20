@@ -53,21 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
         switch (state) {
             case 'enabled':
                 pushButton.disabled = false;
-                pushButton.title = "Push notifications enabled";
+                pushButton.textContent = "Push notifications enabled";
                 isPushEnabled = true;
                 break;
             case 'disabled':
                 pushButton.disabled = false;
-                pushButton.title = "Push notifications disabled";
+                pushButton.textContent = "Push notifications disabled";
                 isPushEnabled = false;
                 break;
             case 'computing':
                 pushButton.disabled = true;
-                pushButton.title = "Loading...";
+                pushButton.textContent = "Loading...";
                 break;
             case 'incompatible':
                 pushButton.disabled = true;
-                pushButton.title = "Push notifications are not compatible with this browser";
+                pushButton.textContent = "Push notifications are not compatible with this browser";
                 break;
             default:
                 console.error('Unhandled push button state', state);
@@ -100,7 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then(subscription => {
                 changePushButtonState('enabled'); // Subscription was successful
-                // TODO create subscription
+                // TODO create subscription on your server
+                console.log('User is subscribed');
             })
             .catch(e => {
                 if (Notification.permission === 'denied') {
@@ -122,5 +123,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function push_unsubscribe() {
         changePushButtonState('computing');
+
+        navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+            // To unsubscribe from push messaging, you need to get the subscription object
+            serviceWorkerRegistration.pushManager.getSubscription().then(subscription => {
+                // Check that we have a subscription to unsubscribe
+                if (!subscription) {
+                    // No subscription object, so set the state
+                    // to allow the user to subscribe to push
+                    changePushButtonState('disabled');
+                    return;
+                }
+
+                // We have a subscription, unsubscribe
+                // TODO remove push subscription from server
+                subscription.unsubscribe().then(() => {
+                    changePushButtonState('disabled');
+                    console.log('User is unsubscribed');
+                })
+                .catch(e => {
+                    // We failed to unsubscribe, this can lead to
+                    // an unusual state, so  it may be best to remove
+                    // the users data from your data store and
+                    // inform the user that you have done so
+                    console.error('Error when unsubscribing the user', e);
+                    changePushButtonState('disabled');
+                });
+            })
+            .catch(e => {
+                console.error('Error when getting the subscription to unsubscribe', e);
+            });
+        });
     }
 });
