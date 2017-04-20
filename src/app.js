@@ -94,88 +94,85 @@ document.addEventListener("DOMContentLoaded", () => {
     function push_subscribe() {
         changePushButtonState('computing');
 
-        navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
-            serviceWorkerRegistration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
-            })
-            .then(subscription => {
-                changePushButtonState('enabled'); // Subscription was successful
-                // TODO create subscription on your server
-                console.log('User is subscribed');
-            })
-            .catch(e => {
-                if (Notification.permission === 'denied') {
-                    // The user denied the notification permission which
-                    // means we failed to subscribe and the user will need
-                    // to manually change the notification permission to
-                    // subscribe to push messages
-                    console.warn('Notifications are denied by the user.');
-                    changePushButtonState('incompatible');
-                } else {
-                    // A problem occurred with the subscription; common reasons
-                    // include network errors or the user skipped the permission
-                    console.error('Impossible to subscribe to push notifications', e);
-                    changePushButtonState('disabled');
-                }
-            });
+        navigator.serviceWorker.ready
+        .then(serviceWorkerRegistration => serviceWorkerRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
+        }))
+        .then(subscription => {
+             // Subscription was successful
+            // create subscription on your server
+            return push_sendSubscriptionToServer(subscription, 'create');
+        })
+        .then(() => changePushButtonState('enabled')) // update your UI
+        .catch(e => {
+            if (Notification.permission === 'denied') {
+                // The user denied the notification permission which
+                // means we failed to subscribe and the user will need
+                // to manually change the notification permission to
+                // subscribe to push messages
+                console.warn('Notifications are denied by the user.');
+                changePushButtonState('incompatible');
+            } else {
+                // A problem occurred with the subscription; common reasons
+                // include network errors or the user skipped the permission
+                console.error('Impossible to subscribe to push notifications', e);
+                changePushButtonState('disabled');
+            }
         });
     }
 
     function push_updateSubscription() {
-        navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
-            serviceWorkerRegistration.pushManager.getSubscription()
-            .then(subscription => {
-                changePushButtonState('disabled');
+        navigator.serviceWorker.ready.then(serviceWorkerRegistration => serviceWorkerRegistration.pushManager.getSubscription())
+        .then(subscription => {
+            changePushButtonState('disabled');
 
-                if (!subscription) {
-                    // We aren't subscribed to push, so set UI to allow the user to enable push
-                    return;
-                }
+            if (!subscription) {
+                // We aren't subscribed to push, so set UI to allow the user to enable push
+                return;
+            }
 
-                // TODO Keep your server in sync with the latest endpoint
-
-                // Set your UI to show they have subscribed for push messages
-                changePushButtonState('enabled');
-            })
-            .catch(e => {
-                console.error('Error when updating the subscription', e);
-            });
+            // Keep your server in sync with the latest endpoint
+            return push_sendSubscriptionToServer(subscription, 'update');
+        })
+        .then(() => changePushButtonState('enabled')) // Set your UI to show they have subscribed for push messages
+        .catch(e => {
+            console.error('Error when updating the subscription', e);
         });
     }
 
     function push_unsubscribe() {
         changePushButtonState('computing');
 
-        navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-            // To unsubscribe from push messaging, you need to get the subscription object
-            serviceWorkerRegistration.pushManager.getSubscription().then(subscription => {
-                // Check that we have a subscription to unsubscribe
-                if (!subscription) {
-                    // No subscription object, so set the state
-                    // to allow the user to subscribe to push
-                    changePushButtonState('disabled');
-                    return;
-                }
+        // To unsubscribe from push messaging, you need to get the subscription object
+        navigator.serviceWorker.ready
+        .then(serviceWorkerRegistration => serviceWorkerRegistration.pushManager.getSubscription())
+        .then(subscription => {
+            // Check that we have a subscription to unsubscribe
+            if (!subscription) {
+                // No subscription object, so set the state
+                // to allow the user to subscribe to push
+                changePushButtonState('disabled');
+                return;
+            }
 
-                // We have a subscription, unsubscribe
-                // TODO remove push subscription from server
-                subscription.unsubscribe().then(() => {
-                    changePushButtonState('disabled');
-                    console.log('User is unsubscribed');
-                })
-                .catch(e => {
-                    // We failed to unsubscribe, this can lead to
-                    // an unusual state, so  it may be best to remove
-                    // the users data from your data store and
-                    // inform the user that you have done so
-                    console.error('Error when unsubscribing the user', e);
-                    changePushButtonState('disabled');
-                });
-            })
-            .catch(e => {
-                console.error('Error when getting the subscription to unsubscribe', e);
-            });
+            // We have a subscription, unsubscribe
+            // Remove push subscription from server
+            return push_sendSubscriptionToServer(subscription, 'delete');
+        })
+        .then(subscription => subscription.unsubscribe())
+        .then(() => changePushButtonState('disabled'))
+        .catch(e => {
+            // We failed to unsubscribe, this can lead to
+            // an unusual state, so  it may be best to remove
+            // the users data from your data store and
+            // inform the user that you have done so
+            console.error('Error when unsubscribing the user', e);
+            changePushButtonState('disabled');
         });
+    }
+
+    function push_sendSubscriptionToServer(subscription, action) {
+        return Promise.resolve(subscription);
     }
 });
