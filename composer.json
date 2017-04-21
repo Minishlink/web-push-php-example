@@ -1,0 +1,13 @@
+{
+    "name": "minishlink/web-push-php-example",
+    "description": "An example for sending Web Push notifications, using web-push-php",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Louis Lagrange",
+            "email": "lagrange.louis@gmail.com"
+        }
+    ],
+    "require": {}
+}
