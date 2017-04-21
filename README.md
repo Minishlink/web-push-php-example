@@ -5,7 +5,7 @@ Navigating through the commits and files will help you build:
     - a user friendly opt-in push notification button
 - on the server
     - an endpoint for managing your push notification subscriptions
-    - an endpoint that triggers push notification
+    - an endpoint that triggers push notification thanks to [web-push-php](https://github.com/web-push-libs/web-push-php)
 
 ## Requirements
 - Chrome or Firefox
@@ -17,7 +17,8 @@ Navigating through the commits and files will help you build:
 
 ## Installation
 ```bash
-$ composer install minishlink/web-push-php-example
+$ composer create-project minishlink/web-push-php-example
+$ cd web-push-php-example
 ```
 
 ## Usage
@@ -26,4 +27,4 @@ $ composer install minishlink/web-push-php-example
 $ php -S localhost:8000 router.php
 ```
 
-And open [http://localhost:8000](localhost:8000).
+And open [localhost:8000](http://localhost:8000).
