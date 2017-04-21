@@ -24,3 +24,5 @@ $res = $webPush->sendNotification(
     $subscription['token'],
     true
 );
+
+// handle eventual errors here, and remove the subscription from your server if it is expired
