@@ -9,5 +9,7 @@
             "email": "lagrange.louis@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "minishlink/web-push": "^1.4"
+    }
 }
