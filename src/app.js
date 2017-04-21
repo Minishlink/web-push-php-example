@@ -54,12 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
         switch (state) {
             case 'enabled':
                 pushButton.disabled = false;
-                pushButton.textContent = "Push notifications enabled";
+                pushButton.textContent = "Disable Push notifications";
                 isPushEnabled = true;
                 break;
             case 'disabled':
                 pushButton.disabled = false;
-                pushButton.textContent = "Push notifications disabled";
+                pushButton.textContent = "Enable Push notifications";
                 isPushEnabled = false;
                 break;
             case 'computing':
@@ -102,9 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(subscription => {
              // Subscription was successful
             // create subscription on your server
-            return push_sendSubscriptionToServer(subscription, 'create');
+            return push_sendSubscriptionToServer(subscription, 'POST');
         })
-        .then(() => changePushButtonState('enabled')) // update your UI
+        .then(subscription => subscription && changePushButtonState('enabled')) // update your UI
         .catch(e => {
             if (Notification.permission === 'denied') {
                 // The user denied the notification permission which
@@ -133,9 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Keep your server in sync with the latest endpoint
-            return push_sendSubscriptionToServer(subscription, 'update');
+            return push_sendSubscriptionToServer(subscription, 'PUT');
         })
-        .then(() => changePushButtonState('enabled')) // Set your UI to show they have subscribed for push messages
+        .then(subscription => subscription && changePushButtonState('enabled')) // Set your UI to show they have subscribed for push messages
         .catch(e => {
             console.error('Error when updating the subscription', e);
         });
@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // We have a subscription, unsubscribe
             // Remove push subscription from server
-            return push_sendSubscriptionToServer(subscription, 'delete');
+            return push_sendSubscriptionToServer(subscription, 'DELETE');
         })
         .then(subscription => subscription.unsubscribe())
         .then(() => changePushButtonState('disabled'))
@@ -172,7 +172,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function push_sendSubscriptionToServer(subscription, action) {
-        return Promise.resolve(subscription);
+    function push_sendSubscriptionToServer(subscription, method) {
+        const key = subscription.getKey('p256dh');
+        const token = subscription.getKey('auth');
+
+        return fetch('push_subscription.php', {
+            method,
+            body: JSON.stringify({
+                endpoint: subscription.endpoint,
+                key: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
+                token: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null
+            }),
+        }).then(() => subscription);
     }
 });
