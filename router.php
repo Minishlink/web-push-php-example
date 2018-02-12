@@ -23,12 +23,12 @@ if ($filePath && is_file($filePath)) {
         substr(basename($filePath), 0, 1) != '.'
     ) {
         if (strtolower(substr($filePath, -4)) == '.php') {
-            include DIRECTORY_SEPARATOR . $filePath;
+            include $filePath;
         } else {
             if (strtolower(substr($filePath, -3)) == '.js') {
                 Header('Content-Type: text/javascript');
             }
-            readfile (DIRECTORY_SEPARATOR . $filePath);
+            readfile ($filePath);
         }
     } else {
         // disallowed file
