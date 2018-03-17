@@ -9,11 +9,13 @@ Navigating through the commits and files will help you build:
 
 ## Requirements
 - Chrome or Firefox
-- PHP 5.6+
+- PHP 7.1+
     - gmp
     - mbstring
     - curl
     - openssl
+
+PHP 5.6+ is no longer maintained, but you can checkout the `v1.x` branch.
 
 ## Installation
 ```bash
