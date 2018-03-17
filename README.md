@@ -17,7 +17,7 @@ Navigating through the commits and files will help you build:
 
 ## Installation
 ```bash
-$ composer create-project minishlink/web-push-php-example
+$ composer create-project minishlink/web-push-php-example WebPush 1.0.2
 $ cd web-push-php-example
 ```
 
