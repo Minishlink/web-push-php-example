@@ -175,13 +175,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function push_sendSubscriptionToServer(subscription, method) {
         const key = subscription.getKey('p256dh');
         const token = subscription.getKey('auth');
+        const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
 
         return fetch('push_subscription.php', {
             method,
             body: JSON.stringify({
                 endpoint: subscription.endpoint,
-                key: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
-                token: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null
+                publicKey: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
+                authToken: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null,
+                contentEncoding,
             }),
         }).then(() => subscription);
     }
@@ -208,13 +210,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const key = subscription.getKey('p256dh');
             const token = subscription.getKey('auth');
+            const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
 
             fetch('send_push_notification.php', {
                 method: 'POST',
                 body: JSON.stringify({
                     endpoint: subscription.endpoint,
-                    key: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh')))) : null,
-                    token: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth')))) : null
+                    publicKey: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh')))) : null,
+                    authToken: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth')))) : null,
+                    contentEncoding,
                 })
             })
         })

@@ -1,11 +1,12 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 use Minishlink\WebPush\WebPush;
+use Minishlink\WebPush\Subscription;
 
 // here I'll get the subscription endpoint in the POST parameters
 // but in reality, you'll get this information in your database
 // because you already stored it (cf. push_subscription.php)
-$subscription = json_decode(file_get_contents('php://input'), true);
+$subscription = Subscription::create(json_decode(file_get_contents('php://input'), true));
 
 $auth = array(
     'VAPID' => array(
@@ -18,10 +19,8 @@ $auth = array(
 $webPush = new WebPush($auth);
 
 $res = $webPush->sendNotification(
-    $subscription['endpoint'],
+    $subscription,
     "Hello!",
-    $subscription['key'],
-    $subscription['token'],
     true
 );
 

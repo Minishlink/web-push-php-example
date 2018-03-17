@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "586fa6e7cd8698438194a7101d6a2477",
+    "content-hash": "5e8c3b054df2c7485cb4e7eeb9cc77cb",
     "packages": [
         {
             "name": "fgrosse/phpasn1",
@@ -258,16 +258,16 @@
         },
         {
             "name": "minishlink/web-push",
-            "version": "v3.0.2",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-push-libs/web-push-php.git",
-                "reference": "18ddf3a676d0d249f44224005e72154613b1c6aa"
+                "reference": "75d198b2c083a3d009133e342718be3cca64c1b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-push-libs/web-push-php/zipball/18ddf3a676d0d249f44224005e72154613b1c6aa",
-                "reference": "18ddf3a676d0d249f44224005e72154613b1c6aa",
+                "url": "https://api.github.com/repos/web-push-libs/web-push-php/zipball/75d198b2c083a3d009133e342718be3cca64c1b0",
+                "reference": "75d198b2c083a3d009133e342718be3cca64c1b0",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,7 @@
                 "push",
                 "web"
             ],
-            "time": "2018-03-17T10:49:32+00:00"
+            "time": "2018-03-17T20:34:19+00:00"
         },
         {
             "name": "paragonie/random_compat",
