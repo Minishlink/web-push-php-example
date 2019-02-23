@@ -20,9 +20,16 @@ $webPush = new WebPush($auth);
 
 $res = $webPush->sendNotification(
     $subscription,
-    "Hello!",
-    true
+    "Hello!"
 );
 
 // handle eventual errors here, and remove the subscription from your server if it is expired
-var_dump($res);
+foreach ($webPush->flush() as $report) {
+    $endpoint = $report->getRequest()->getUri()->__toString();
+
+    if ($report->isSuccess()) {
+        echo "[v] Message sent successfully for subscription {$endpoint}.";
+    } else {
+        echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
+    }
+}
