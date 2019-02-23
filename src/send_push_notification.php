@@ -11,8 +11,8 @@ $subscription = Subscription::create(json_decode(file_get_contents('php://input'
 $auth = array(
     'VAPID' => array(
         'subject' => 'https://github.com/Minishlink/web-push-php-example/',
-        'publicKey' => 'BCmti7ScwxxVAlB7WAyxoOXtV7J8vVCXwEDIFXjKvD-ma-yJx_eHJLdADyyzzTKRGb395bSAtxlh4wuDycO3Ih4',
-        'privateKey' => 'HJweeF64L35gw5YLECa-K7hwp3LLfcKtpdRNK8C_fPQ', // in the real world, this would be in a secret file
+        'publicKey' => file_get_contents(__DIR__ . '/../keys/public_key.txt'), // don't forget that your public key also lives in app.js
+        'privateKey' => file_get_contents(__DIR__ . '/../keys/private_key.txt'), // in the real world, this would be in a secret file
     ),
 );
 
@@ -25,3 +25,4 @@ $res = $webPush->sendNotification(
 );
 
 // handle eventual errors here, and remove the subscription from your server if it is expired
+var_dump($res);

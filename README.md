@@ -23,6 +23,9 @@ $ composer create-project minishlink/web-push-php-example
 $ cd web-push-php-example
 ```
 
+You can change the VAPID keys in the [keys](./keys) folder with [this guide](https://github.com/web-push-libs/web-push-php#authentication-vapid).
+Don't forget to update the public key in [app.js](./src/app.js) too.
+
 ## Usage
 
 ```bash
