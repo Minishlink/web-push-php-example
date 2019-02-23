@@ -212,10 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const jsonSubscription = subscription.toJSON();
             fetch('send_push_notification.php', {
                 method: 'POST',
-                body: JSON.stringify({
-                    ...jsonSubscription,
-                    contentEncoding,
-                })
+                body: JSON.stringify(Object.assign(jsonSubscription, { contentEncoding })),
             })
         })
     );
