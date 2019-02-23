@@ -91,10 +91,33 @@ document.addEventListener("DOMContentLoaded", () => {
         return outputArray;
     }
 
+    function checkNotificationPermission() {
+        return new Promise((resolve, reject) => {
+            if (Notification.permission === 'denied') {
+                return reject(new Error('Push messages are blocked.'));
+            }
+
+            if (Notification.permission === 'granted') {
+                return resolve();
+            }
+
+            if (Notification.permission === 'default') {
+                return Notification.requestPermission().then(result => {
+                    if (result !== 'granted') {
+                        reject(new Error('Bad permission result'));
+                    }
+
+                    resolve();
+                });
+            }
+        });
+    }
+
     function push_subscribe() {
         changePushButtonState('computing');
 
-        navigator.serviceWorker.ready
+        return checkNotificationPermission()
+        .then(() => navigator.serviceWorker.ready)
         .then(serviceWorkerRegistration => serviceWorkerRegistration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
