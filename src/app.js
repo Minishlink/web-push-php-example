@@ -208,16 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const key = subscription.getKey('p256dh');
-            const token = subscription.getKey('auth');
             const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
-
+            const jsonSubscription = subscription.toJSON();
             fetch('send_push_notification.php', {
                 method: 'POST',
                 body: JSON.stringify({
-                    endpoint: subscription.endpoint,
-                    publicKey: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh')))) : null,
-                    authToken: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth')))) : null,
+                    ...jsonSubscription,
                     contentEncoding,
                 })
             })
