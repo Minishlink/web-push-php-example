@@ -111,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
           resolve();
         });
       }
+
+      return reject(new Error('Unknown permission'));
     });
   }
 
