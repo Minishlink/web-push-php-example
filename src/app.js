@@ -106,11 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return Notification.requestPermission().then(result => {
           if (result !== 'granted') {
             reject(new Error('Bad permission result'));
+          } else {
+            resolve();
           }
-
-          resolve();
         });
       }
+
+      return reject(new Error('Unknown permission'));
     });
   }
 
