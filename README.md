@@ -9,12 +9,14 @@ Navigating through the commits and files will help you build:
 
 ## Requirements
 - Chrome or Firefox
-- PHP 7.1+
+- [composer](https://getcomposer.org/)
+- PHP 7.2+
     - gmp
     - mbstring
     - curl
     - openssl
 
+PHP 7.1 is no longer maintained, but you can checkout the `v2.x` branch.
 PHP 5.6+ is no longer maintained, but you can checkout the `v1.x` branch.
 
 ## Installation
