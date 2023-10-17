@@ -20,7 +20,7 @@ $webPush = new WebPush($auth);
 
 $report = $webPush->sendOneNotification(
     $subscription,
-    "Hello! 👋"
+    '{"message":"Hello! 👋"}',
 );
 
 // handle eventual errors here, and remove the subscription from your server if it is expired

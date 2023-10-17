@@ -13,7 +13,7 @@ self.addEventListener('push', function (event) {
     };
 
     if (event.data) {
-        const message = event.data.text();
-        event.waitUntil(sendNotification(message));
+        const payload = event.data.json();
+        event.waitUntil(sendNotification(payload.message));
     }
 });
