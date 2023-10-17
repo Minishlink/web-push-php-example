@@ -10,6 +10,6 @@
         }
     ],
     "require": {
-        "minishlink/web-push": "^6.0.0"
+        "minishlink/web-push": "^8.0.0"
     }
 }
